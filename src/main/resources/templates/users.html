@@ -15,8 +15,14 @@
 			<td th:text="${user.id}"></td>
 			<td th:text="${user.name}"></td>
 			<td th:text="${user.email}"></td>
+			<td>
+				<form th:action="@{'/users/delete/' + ${user.id}}" th:method="delete">
+					<input type="submit" value="削除">
+				</form>
+			</td>
 		</tr>
 	</table>
+	<a th:href="@{/newuser}">新規登録へ</a>
 
 </body>
 </html>

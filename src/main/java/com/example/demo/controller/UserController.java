@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.data.entity.User;
 import com.example.demo.data.repository.UserRepository;
@@ -28,6 +32,25 @@ public class UserController {
 		UserForm userForm = new UserForm();
 		model.addAttribute("userForm", userForm);
 		return "newuser";
+	}
+	
+	@PostMapping("/newuser")
+	public String registerUser(@Validated UserForm userForm, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "newuser";
+		}
+		
+		User user = new User();
+		user.setName(userForm.getName());
+		user.setEmail(userForm.getEmail());
+		userRepository.save(user);
+		return "redirect:/users";
+	}
+	
+	@PostMapping("users/delete/{id}")
+	public String deleteUser(@PathVariable Long id) {
+		userRepository.deleteById(id);
+		return "redirect:/users";
 	}
 
 }
